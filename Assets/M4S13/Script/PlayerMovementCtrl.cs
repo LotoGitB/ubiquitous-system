@@ -13,6 +13,7 @@ public class PlayerMovementCtrl : MonoBehaviour
   private bool isGrounded;
   private Vector3 inputValue;
   private Rigidbody rb;
+
   // Start is called before the first frame update
   void Start()
   {
@@ -25,7 +26,9 @@ public class PlayerMovementCtrl : MonoBehaviour
   {
     if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
     {
-      inputValue = new Vector3(0, 0, Input.GetAxis("Vertical")) * movementSpeed;
+      inputValue = gameObject.transform.forward * Input.GetAxis("Vertical") * movementSpeed;
+      // inputValue = new Vector3(Input.GetAxis("Horizontal") * movementSpeed, rb.velocity.y, Input.GetAxis("Vertical") * movementSpeed);
+
       animCtrl.SetBool("isMoving", true);
       if (Input.GetAxis("Horizontal") != 0)
       {
@@ -35,6 +38,7 @@ public class PlayerMovementCtrl : MonoBehaviour
     else
     {
       animCtrl.SetBool("isMoving", false);
+      rb.velocity = Vector3.zero;
     }
 
     if (Input.GetKey(KeyCode.LeftShift))
@@ -61,10 +65,16 @@ public class PlayerMovementCtrl : MonoBehaviour
 
   private void FixedUpdate()
   {
-    Vector3 movement = transform.forward * inputValue.z * Time.deltaTime;
-    rb.MovePosition(rb.position + movement);
-    // rb.velocity
-    //  = inputValue;
-
+    //rb.AddForce(inputValue, ForceMode.Impulse);
+    rb.velocity = inputValue;
+    //Vector3 movement = transform.forward * inputValue.z * Time.deltaTime;
+    //rb.MovePosition(rb.position + movement);
   }
+
+  public void ClearPhysic()
+  {
+    rb.velocity = Vector3.zero;
+    rb.angularVelocity = Vector3.zero;
+  }
+
 }
