@@ -8,11 +8,14 @@ public class PlayerNavCtrl : MonoBehaviour
 {
   RaycastHit raycastHit;
   private NavMeshAgent agente;
+  private Vector3 initialPos;
 
   // Start is called before the first frame update
   void Start()
   {
+    initialPos = gameObject.transform.position;
     agente = gameObject.GetComponent<NavMeshAgent>();
+    GameManager.gameManager.FindUIElements();
   }
 
   void Update()
@@ -27,5 +30,11 @@ public class PlayerNavCtrl : MonoBehaviour
         agente.SetDestination(hit.point);
       }
     }
+  }
+
+  public void RestartPosition()
+  {
+    gameObject.transform.position = initialPos;
+    agente.SetDestination(gameObject.transform.position);
   }
 }
